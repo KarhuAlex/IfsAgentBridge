@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using IfsODataMcp.Core;
@@ -21,6 +22,7 @@ public sealed class ToolRunner(ILogger<ToolRunner> logger, SecretRedactor redact
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     };
 
+    [SuppressMessage("Design", "CA1031", Justification = "An unexpected failure must not end the stdio session.")]
     public async Task<CallToolResult> RunAsync<T>(Func<Task<T>> action)
     {
         try

@@ -1,0 +1,46 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[*.{csproj,props,slnx,json,yml}]
+indent_size = 2
+
+[*.cs]
+# Nullable reference types already cover argument checks.
+dotnet_diagnostic.CA1062.severity = none
+# Logging is low volume; the message templates are fine.
+dotnet_diagnostic.CA1848.severity = none
+dotnet_diagnostic.CA1873.severity = none
+# Exception types carry a fixed code and message; the standard constructors would bypass that.
+dotnet_diagnostic.CA1032.severity = none
+# Option classes are bound from configuration and need settable collections and string URLs.
+dotnet_diagnostic.CA1002.severity = none
+dotnet_diagnostic.CA2227.severity = none
+dotnet_diagnostic.CA1054.severity = none
+dotnet_diagnostic.CA1056.severity = none
+# Types stay public so the test project can use them.
+dotnet_diagnostic.CA1515.severity = none
+
+[{IfsODataMcp.Tests,MockODataService}/**.cs]
+dotnet_diagnostic.CA1707.severity = none
+dotnet_diagnostic.CA1307.severity = none
+dotnet_diagnostic.CA1305.severity = none
+dotnet_diagnostic.CA1310.severity = none
+dotnet_diagnostic.CA2000.severity = none
+dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA1861.severity = none
+dotnet_diagnostic.CA2234.severity = none
+dotnet_diagnostic.CA5394.severity = none
+dotnet_diagnostic.CA1308.severity = none
+dotnet_diagnostic.CA1031.severity = none
+dotnet_diagnostic.CA1859.severity = none
+dotnet_diagnostic.CA1873.severity = none
+dotnet_diagnostic.CA1819.severity = none
+dotnet_diagnostic.CA1822.severity = none
+dotnet_diagnostic.CA1849.severity = none

@@ -43,8 +43,8 @@ public class PolicyTests
         var policy = new AccessPolicy(TestSupport.Options(o => o.Projections[0].EntitySets = ["Suppliers"]));
         var rule = policy.EnsureProjectionAllowed("ProcurementDemo");
 
-        policy.EnsureEntitySetAllowed(rule, "Suppliers");
-        Assert.Throws<PolicyViolationException>(() => policy.EnsureEntitySetAllowed(rule, "PurchaseOrders"));
+        AccessPolicy.EnsureEntitySetAllowed(rule, "Suppliers");
+        Assert.Throws<PolicyViolationException>(() => AccessPolicy.EnsureEntitySetAllowed(rule, "PurchaseOrders"));
     }
 
     [Fact]
@@ -53,7 +53,7 @@ public class PolicyTests
         var policy = new AccessPolicy(TestSupport.Options());
         var rule = policy.EnsureProjectionAllowed("ProcurementDemo");
 
-        policy.EnsureEntitySetAllowed(rule, "PurchaseOrders");
+        AccessPolicy.EnsureEntitySetAllowed(rule, "PurchaseOrders");
     }
 
     [Fact]
@@ -87,8 +87,8 @@ public class PolicyTests
         var rule = policy.EnsureProjectionAllowed("ProcurementDemo");
         var orders = metadata.FindEntitySet("PurchaseOrders")!.EntityType;
 
-        Assert.True(policy.IsNavigationAllowed(rule, metadata, orders.FindNavigation("Supplier")!));
-        Assert.False(policy.IsNavigationAllowed(rule, metadata, orders.FindNavigation("Lines")!));
+        Assert.True(AccessPolicy.IsNavigationAllowed(rule, metadata, orders.FindNavigation("Supplier")!));
+        Assert.False(AccessPolicy.IsNavigationAllowed(rule, metadata, orders.FindNavigation("Lines")!));
     }
 
     [Theory]

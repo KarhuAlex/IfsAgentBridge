@@ -184,15 +184,8 @@ public sealed class InteractivePkceProvider : IAuthProvider, IDisposable
 
     private static int FindFreePort()
     {
-        var listener = new TcpListener(IPAddress.Loopback, 0);
+        using var listener = new TcpListener(IPAddress.Loopback, 0);
         listener.Start();
-        try
-        {
-            return ((IPEndPoint)listener.LocalEndpoint).Port;
-        }
-        finally
-        {
-            listener.Stop();
-        }
+        return ((IPEndPoint)listener.LocalEndpoint).Port;
     }
 }

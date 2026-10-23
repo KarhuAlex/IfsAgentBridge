@@ -51,7 +51,8 @@ public sealed class ODataHttpClient(HttpClient http, PolicyOptions limits, Secre
 
     private async Task<string> ReadBoundedAsync(HttpResponseMessage response, CancellationToken cancellationToken)
     {
-        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        await using var _ = stream.ConfigureAwait(false);
         using var buffer = new MemoryStream();
         var chunk = new byte[16 * 1024];
         int read;
@@ -62,7 +63,7 @@ public sealed class ODataHttpClient(HttpClient http, PolicyOptions limits, Secre
                 throw TooLarge();
             }
 
-            buffer.Write(chunk, 0, read);
+            await buffer.WriteAsync(chunk.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
         }
 
         return Encoding.UTF8.GetString(buffer.GetBuffer(), 0, (int)buffer.Length);

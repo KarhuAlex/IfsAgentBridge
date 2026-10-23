@@ -42,10 +42,10 @@ public sealed partial class AccessPolicy
         return rule;
     }
 
-    public bool IsEntitySetAllowed(ProjectionRule rule, string entitySet) =>
+    public static bool IsEntitySetAllowed(ProjectionRule rule, string entitySet) =>
         rule.EntitySets is not { Count: > 0 } || rule.EntitySets.Contains(entitySet, StringComparer.Ordinal);
 
-    public void EnsureEntitySetAllowed(ProjectionRule rule, string? entitySet)
+    public static void EnsureEntitySetAllowed(ProjectionRule rule, string? entitySet)
     {
         if (string.IsNullOrWhiteSpace(entitySet) || !IsEntitySetAllowed(rule, entitySet))
         {
@@ -70,7 +70,7 @@ public sealed partial class AccessPolicy
     /// A navigation property is usable only if its target type lives in at least one allowed entity set.
     /// Otherwise expanding it would leak data from an entity set the policy excludes.
     /// </summary>
-    public bool IsNavigationAllowed(ProjectionRule rule, ServiceMetadata metadata, NavigationInfo navigation)
+    public static bool IsNavigationAllowed(ProjectionRule rule, ServiceMetadata metadata, NavigationInfo navigation)
     {
         var target = metadata.FindType(navigation.TargetType);
         return target is not null && target.EntitySetNames.Any(s => IsEntitySetAllowed(rule, s));

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using IfsODataMcp.Core.Configuration;
 
@@ -23,7 +24,7 @@ public sealed class ODataUrlBuilder
             throw new ConfigurationException("Endpoint:BaseUrl must be an absolute http(s) URL.");
         }
 
-        if (string.IsNullOrWhiteSpace(options.ServiceRootTemplate) || !options.ServiceRootTemplate.Contains("{projection}"))
+        if (string.IsNullOrWhiteSpace(options.ServiceRootTemplate) || !options.ServiceRootTemplate.Contains("{projection}", StringComparison.Ordinal))
         {
             throw new ConfigurationException("Endpoint:ServiceRootTemplate must be set and contain the {projection} placeholder.");
         }
@@ -93,14 +94,14 @@ public sealed class ODataUrlBuilder
         Span<byte> bytes = stackalloc byte[4];
         foreach (var rune in value.EnumerateRunes())
         {
-            if (rune.IsAscii && (char.IsAsciiLetterOrDigit((char)rune.Value) || safe.Contains((char)rune.Value)))
+            if (rune.IsAscii && (char.IsAsciiLetterOrDigit((char)rune.Value) || safe.Contains((char)rune.Value, StringComparison.Ordinal)))
             {
                 builder.Append((char)rune.Value);
                 continue;
             }
 
             var count = rune.EncodeToUtf8(bytes);
-            for (var i = 0; i < count; i++) builder.Append('%').Append(bytes[i].ToString("X2"));
+            for (var i = 0; i < count; i++) builder.Append('%').Append(bytes[i].ToString("X2", CultureInfo.InvariantCulture));
         }
 
         return builder.ToString();

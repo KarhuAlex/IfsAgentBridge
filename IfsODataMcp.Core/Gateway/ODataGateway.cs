@@ -76,7 +76,7 @@ public sealed class ODataGateway
             {
                 var rule = _policy.EnsureProjectionAllowed(projection.Name);
                 var metadata = await GetMetadataAsync(projection.Name, ct).ConfigureAwait(false);
-                var sets = metadata.EntitySets.Select(s => s.Name).Where(n => _policy.IsEntitySetAllowed(rule, n)).Order().ToList();
+                var sets = metadata.EntitySets.Select(s => s.Name).Where(n => AccessPolicy.IsEntitySetAllowed(rule, n)).Order().ToList();
                 result.Add(projection with { EntitySets = sets });
             }
 
@@ -91,11 +91,11 @@ public sealed class ODataGateway
 
             var properties = _policy.AllowedProperties(type).ToList();
             var navigations = type.Navigations
-                .Where(n => _policy.IsNavigationAllowed(rule, metadata, n))
+                .Where(n => AccessPolicy.IsNavigationAllowed(rule, metadata, n))
                 .Select(n => new NavigationDescription(
                     n.Name,
                     n.TargetType,
-                    metadata.FindType(n.TargetType)!.EntitySetNames.Where(s => _policy.IsEntitySetAllowed(rule, s)).ToList(),
+                    metadata.FindType(n.TargetType)!.EntitySetNames.Where(s => AccessPolicy.IsEntitySetAllowed(rule, s)).ToList(),
                     n.IsCollection))
                 .ToList();
 
@@ -184,7 +184,7 @@ public sealed class ODataGateway
         string projection, string entitySet, CancellationToken ct)
     {
         var rule = _policy.EnsureProjectionAllowed(projection);
-        _policy.EnsureEntitySetAllowed(rule, entitySet);
+        AccessPolicy.EnsureEntitySetAllowed(rule, entitySet);
 
         var metadata = await GetMetadataAsync(projection, ct).ConfigureAwait(false);
         var set = metadata.FindEntitySet(entitySet)

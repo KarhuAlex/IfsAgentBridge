@@ -26,7 +26,7 @@ public sealed partial class QueryValidator(AccessPolicy policy)
         if (!string.IsNullOrWhiteSpace(request.Filter))
         {
             filter = request.Filter.Trim();
-            FilterValidator.Validate(filter, type, metadata, policy, nav => policy.IsNavigationAllowed(rule, metadata, nav));
+            FilterValidator.Validate(filter, type, metadata, policy, nav => AccessPolicy.IsNavigationAllowed(rule, metadata, nav));
         }
 
         var orderBy = ValidateOrderBy(type, request.OrderBy);
@@ -73,7 +73,7 @@ public sealed partial class QueryValidator(AccessPolicy policy)
         return result;
     }
 
-    private IReadOnlyList<OrderByItem> ValidateOrderBy(EntityTypeInfo type, string? orderBy)
+    private List<OrderByItem> ValidateOrderBy(EntityTypeInfo type, string? orderBy)
     {
         if (string.IsNullOrWhiteSpace(orderBy)) return [];
 
@@ -87,7 +87,7 @@ public sealed partial class QueryValidator(AccessPolicy policy)
             }
 
             var property = match.Groups[1].Value;
-            if (property.Contains('/'))
+            if (property.Contains('/', StringComparison.Ordinal))
             {
                 throw new QueryValidationException("$orderby on navigation paths is not supported.");
             }
@@ -122,7 +122,7 @@ public sealed partial class QueryValidator(AccessPolicy policy)
         return requested.Value;
     }
 
-    private IReadOnlyList<ExpandNode> ValidateExpand(
+    private List<ExpandNode> ValidateExpand(
         ProjectionRule rule, ServiceMetadata metadata, EntityTypeInfo type, IReadOnlyList<string>? requested)
     {
         var paths = (requested ?? []).Select(s => s.Trim()).Where(s => s.Length > 0).Distinct(StringComparer.Ordinal).ToList();
@@ -150,7 +150,7 @@ public sealed partial class QueryValidator(AccessPolicy policy)
                 var nav = current.Type.FindNavigation(segment)
                     ?? throw new QueryValidationException($"Unknown navigation property '{segment}' on {current.Type.Name}.");
 
-                if (!policy.IsNavigationAllowed(rule, metadata, nav))
+                if (!AccessPolicy.IsNavigationAllowed(rule, metadata, nav))
                 {
                     throw new PolicyViolationException($"Navigation property '{segment}' leads to an entity set that is not allowed.");
                 }

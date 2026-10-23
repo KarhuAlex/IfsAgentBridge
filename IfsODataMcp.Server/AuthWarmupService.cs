@@ -1,4 +1,5 @@
 using IfsODataMcp.Auth;
+using IfsODataMcp.Core;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -25,7 +26,7 @@ public sealed class AuthWarmupService(IAuthProvider auth, AuthOptions options, I
         {
             // Shutting down.
         }
-        catch (Exception ex)
+        catch (Exception ex) when (ex is BridgeException or HttpRequestException)
         {
             logger.LogWarning("Sign-in at startup did not complete: {Message}", ex.Message);
         }

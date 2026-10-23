@@ -96,7 +96,7 @@ public static partial class FilterValidator
                 // Typed literal such as duration'P1D' or Ns.Status'Open'.
                 if (position < filter.Length && filter[position] == '\'' )
                 {
-                    if (!TypedLiteralPrefixes.Contains(word) && !word.Contains('.'))
+                    if (!TypedLiteralPrefixes.Contains(word) && !word.Contains('.', StringComparison.Ordinal))
                     {
                         throw new QueryValidationException($"$filter contains an unsupported literal prefix '{word}'.");
                     }
@@ -147,7 +147,7 @@ public static partial class FilterValidator
     private static void ValidatePropertyPath(
         string path, EntityTypeInfo type, ServiceMetadata metadata, AccessPolicy policy, Func<NavigationInfo, bool> isNavigationAllowed)
     {
-        if (path.Contains('.'))
+        if (path.Contains('.', StringComparison.Ordinal))
         {
             throw new QueryValidationException($"$filter reference '{path}' is not a property of {type.Name}.");
         }

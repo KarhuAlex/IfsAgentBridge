@@ -30,7 +30,7 @@ try
     builder.Configuration.AddCommandLine(args);
 
     var level = builder.Configuration.GetValue("Logging:LogLevel:Default", LogLevel.Information);
-    builder.Logging.AddProvider(new RedactingLoggerProvider(Console.Error, redactor, level));
+    builder.Services.AddSingleton<ILoggerProvider>(_ => new RedactingLoggerProvider(Console.Error, redactor, level));
 
     builder.Services.AddIfsAgentBridge(builder.Configuration, redactor);
     builder.Services
@@ -57,12 +57,12 @@ try
         logger.LogWarning("No projections are allowed, so every tool call will be rejected. Set Policy:Projections.");
     }
 
-    await host.RunAsync();
+    await host.RunAsync().ConfigureAwait(false);
     return 0;
 }
 catch (BridgeException ex)
 {
-    Console.Error.WriteLine($"ifs-agent-bridge: {redactor.Redact(ex.Message)}");
+    await Console.Error.WriteLineAsync($"ifs-agent-bridge: {redactor.Redact(ex.Message)}").ConfigureAwait(false);
     return 2;
 }
 

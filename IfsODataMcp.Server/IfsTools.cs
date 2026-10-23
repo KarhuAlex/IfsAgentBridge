@@ -24,7 +24,7 @@ public sealed class IfsTools(ODataGateway gateway, ToolRunner runner)
         CancellationToken cancellationToken = default) =>
         runner.RunAsync(async () => new
         {
-            projections = await gateway.ListProjectionsAsync(includeEntitySets, cancellationToken),
+            projections = await gateway.ListProjectionsAsync(includeEntitySets, cancellationToken).ConfigureAwait(false),
         });
 
     [McpServerTool(Name = "describe_entity_set", Title = "Describe entity set", ReadOnly = true, Destructive = false, Idempotent = true)]
@@ -49,7 +49,7 @@ public sealed class IfsTools(ODataGateway gateway, ToolRunner runner)
         CancellationToken cancellationToken = default) =>
         runner.RunAsync(async () =>
         {
-            var outcome = await gateway.QueryAsync(projection, entitySet, Request(select, filter, orderby, top, expand), cancellationToken);
+            var outcome = await gateway.QueryAsync(projection, entitySet, Request(select, filter, orderby, top, expand), cancellationToken).ConfigureAwait(false);
             return new { notice = ToolRunner.UntrustedDataNotice, outcome.Projection, outcome.EntitySet, outcome.RowCount, outcome.HasMore, outcome.Warnings, data = outcome.Data };
         });
 
@@ -65,7 +65,7 @@ public sealed class IfsTools(ODataGateway gateway, ToolRunner runner)
         CancellationToken cancellationToken = default) =>
         runner.RunAsync(async () =>
         {
-            var outcome = await gateway.GetEntityAsync(projection, entitySet, keys, Request(select, null, null, null, expand), cancellationToken);
+            var outcome = await gateway.GetEntityAsync(projection, entitySet, keys, Request(select, null, null, null, expand), cancellationToken).ConfigureAwait(false);
             return new { notice = ToolRunner.UntrustedDataNotice, outcome.Projection, outcome.EntitySet, outcome.Warnings, data = outcome.Data };
         });
 

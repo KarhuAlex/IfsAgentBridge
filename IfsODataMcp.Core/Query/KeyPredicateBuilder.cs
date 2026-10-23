@@ -55,7 +55,7 @@ public static class KeyPredicateBuilder
         switch (property.Type)
         {
             case "Edm.String":
-                return "'" + text.Replace("'", "''") + "'";
+                return "'" + text.Replace("'", "''", StringComparison.Ordinal) + "'";
             case "Edm.Int16" or "Edm.Int32" or "Edm.Int64" or "Edm.Byte" or "Edm.SByte":
                 if (!long.TryParse(text, NumberStyles.AllowLeadingSign, CultureInfo.InvariantCulture, out var integer))
                     throw Bad(property);
