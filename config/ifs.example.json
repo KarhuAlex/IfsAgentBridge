@@ -1,0 +1,38 @@
+{
+  "_comment": "TEMPLATE with placeholders. Every URL pattern and auth detail below is an assumption to verify against your IFS version (see README). Copy to an untracked file such as config/ifs.local.json.",
+  "Endpoint": {
+    "BaseUrl": "https://your-ifs-host.example.com",
+    "ServiceRootTemplate": "{baseUrl}/main/ifsapplications/projection/v1/{projection}.svc/",
+    "MetadataPath": "$metadata",
+    "AllowInsecureHttp": false
+  },
+  "Policy": {
+    "Projections": [
+      {
+        "Name": "YourProjectionName",
+        "Description": "Describe what this projection is for.",
+        "EntitySets": [ "YourEntitySet" ]
+      }
+    ],
+    "DeniedProperties": [ "SomePersonalDataField", "YourEntityType.AnotherSensitiveField" ],
+    "DefaultTop": 50,
+    "MaxTop": 200,
+    "MaxExpandDepth": 1
+  },
+  "Audit": {
+    "Enabled": true,
+    "Path": "C:/Users/you/AppData/Local/IfsAgentBridge/audit.jsonl"
+  },
+  "Auth": {
+    "Mode": "InteractivePkce",
+    "LoginAtStartup": true,
+    "Oidc": {
+      "Authority": "https://your-ifs-host.example.com/auth/realms/your-realm",
+      "ClientId": "your-registered-public-client",
+      "Scope": "openid offline_access",
+      "RedirectPort": 7890,
+      "RedirectPath": "/callback",
+      "LoginTimeoutSeconds": 120
+    }
+  }
+}

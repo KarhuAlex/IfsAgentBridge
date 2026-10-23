@@ -44,7 +44,20 @@ try
         .WithStdioServerTransport()
         .WithTools<IfsTools>();
 
-    await builder.Build().RunAsync();
+    using var host = builder.Build();
+
+    // Resolve the long-lived services up front so a configuration mistake stops the server with a clear message.
+    var auth = host.Services.GetRequiredService<IfsODataMcp.Auth.IAuthProvider>();
+    var policy = host.Services.GetRequiredService<IfsODataMcp.Core.Policy.AccessPolicy>();
+    var logger = host.Services.GetRequiredService<ILoggerFactory>().CreateLogger("ifs-agent-bridge");
+    logger.LogInformation(
+        "Started: read-only (HTTP GET only), {Count} projection(s) allowed, auth mode {Auth}.", policy.Projections.Count, auth.Name);
+    if (policy.Projections.Count == 0)
+    {
+        logger.LogWarning("No projections are allowed, so every tool call will be rejected. Set Policy:Projections.");
+    }
+
+    await host.RunAsync();
     return 0;
 }
 catch (BridgeException ex)

@@ -1,0 +1,27 @@
+{
+  "Endpoint": {
+    "BaseUrl": "http://127.0.0.1:5100",
+    "ServiceRootTemplate": "{baseUrl}/odata/{projection}/",
+    "MetadataPath": "$metadata"
+  },
+  "Policy": {
+    "Projections": [
+      {
+        "Name": "ProcurementDemo",
+        "Description": "Fictional suppliers, purchase orders and order lines (mock data)."
+      }
+    ],
+    "DeniedProperties": [ "ContactEmail", "ContactPhone" ],
+    "DefaultTop": 50,
+    "MaxTop": 200,
+    "MaxExpandDepth": 1,
+    "MaxResponseBytes": 1000000,
+    "RequestTimeoutSeconds": 30
+  },
+  "Audit": {
+    "Enabled": true
+  },
+  "Auth": {
+    "Mode": "None"
+  }
+}
