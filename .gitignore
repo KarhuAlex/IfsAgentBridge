@@ -1,0 +1,25 @@
+## .NET build output
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.idea/
+TestResults/
+*.trx
+coverage/
+*.nupkg
+
+## Local configuration and secrets - never commit
+appsettings.Local.json
+appsettings.*.local.json
+*.local.json
+.env
+.env.*
+*.pfx
+*.key
+secrets.json
+
+## Audit logs and scratch
+audit*.jsonl
+*.log

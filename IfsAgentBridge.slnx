@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/samples/">
+    <Project Path="samples/MockODataService/MockODataService.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/IfsODataMcp.Auth/IfsODataMcp.Auth.csproj" />
+    <Project Path="src/IfsODataMcp.Core/IfsODataMcp.Core.csproj" />
+    <Project Path="src/IfsODataMcp.Server/IfsODataMcp.Server.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/IfsODataMcp.Tests/IfsODataMcp.Tests.csproj" />
+  </Folder>
+</Solution>
