@@ -3,11 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace IfsODataMcp.Core.Security;
 
-/// <summary>
-/// Removes secrets from text before it reaches logs, audit entries or error messages.
-/// Combines exact-match redaction of every registered secret with pattern-based redaction
-/// of bearer tokens, JWTs and common credential parameters.
-/// </summary>
+/// <summary>Masks registered secrets and common token shapes in text that goes to logs or errors.</summary>
 public sealed partial class SecretRedactor
 {
     public const string Mask = "[REDACTED]";
@@ -15,7 +11,6 @@ public sealed partial class SecretRedactor
 
     private readonly ConcurrentDictionary<string, byte> _secrets = new(StringComparer.Ordinal);
 
-    /// <summary>Registers a secret (for example an access token) so every later occurrence is masked.</summary>
     public void Register(string? secret)
     {
         if (!string.IsNullOrEmpty(secret) && secret.Length >= MinSecretLength)

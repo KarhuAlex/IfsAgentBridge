@@ -31,8 +31,6 @@ public class AuthTests(WebApplicationFactory<Program> factory) : IClassFixture<W
         return new HttpResponseMessage(HttpStatusCode.OK) { Content = new StringContent("""{"value":[]}""") };
     });
 
-    // ---- simple providers ---------------------------------------------------------------------
-
     [Fact]
     public async Task No_auth_provides_no_token()
     {
@@ -56,8 +54,6 @@ public class AuthTests(WebApplicationFactory<Program> factory) : IClassFixture<W
 
         Assert.Contains("MY_VAR", ex.Message);
     }
-
-    // ---- handler ------------------------------------------------------------------------------
 
     [Fact]
     public async Task Handler_adds_the_bearer_header_only_when_there_is_a_token()
@@ -111,8 +107,6 @@ public class AuthTests(WebApplicationFactory<Program> factory) : IClassFixture<W
         Assert.Equal(401, ex.StatusCode);
         Assert.Contains("authentication", ex.Message);
     }
-
-    // ---- interactive PKCE against the mock identity provider ----------------------------------
 
     [Fact]
     public async Task Pkce_login_yields_a_token_the_protected_service_accepts()
@@ -226,8 +220,6 @@ public class AuthTests(WebApplicationFactory<Program> factory) : IClassFixture<W
             new InteractivePkceProvider(new OidcOptions { Authority = authority, ClientId = clientId }, new SecretRedactor(), Quiet()));
     }
 
-    // ---- loopback browser ---------------------------------------------------------------------
-
     [Fact]
     public async Task Loopback_browser_ignores_stray_requests_and_returns_the_callback_url()
     {
@@ -239,7 +231,7 @@ public class AuthTests(WebApplicationFactory<Program> factory) : IClassFixture<W
             Assert.Equal(HttpStatusCode.NotFound, favicon.StatusCode);
             using var callback = await http.GetAsync($"http://127.0.0.1:{port}/callback?code=abc&state=xyz<script>");
             var page = await callback.Content.ReadAsStringAsync();
-            Assert.DoesNotContain("<script>", page);   // nothing from the request is reflected
+            Assert.DoesNotContain("<script>", page);
         }));
 
         var result = await browser.InvokeAsync(new IdentityModel.OidcClient.Browser.BrowserOptions("https://idp.example.test/authorize", "http://127.0.0.1/"));
@@ -260,8 +252,6 @@ public class AuthTests(WebApplicationFactory<Program> factory) : IClassFixture<W
         Assert.Empty(opened);
     }
 
-    // ---- helpers ------------------------------------------------------------------------------
-
     private static Microsoft.Extensions.Logging.ILogger Quiet() => Microsoft.Extensions.Logging.Abstractions.NullLogger.Instance;
 
     private static int FreePort()
@@ -281,7 +271,6 @@ public class AuthTests(WebApplicationFactory<Program> factory) : IClassFixture<W
         LoginTimeoutSeconds = timeoutSeconds,
     };
 
-    /// <summary>Plays the user: opens the authorization URL against the mock IdP and follows the redirect to the loopback listener.</summary>
     private static Action<Uri> Visit(WebApplicationFactory<Program> app) => url => Task.Run(async () =>
     {
         using var idp = app.CreateClient();

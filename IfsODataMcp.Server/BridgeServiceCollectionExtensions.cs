@@ -15,10 +15,6 @@ namespace IfsODataMcp.Server;
 
 public static class BridgeServiceCollectionExtensions
 {
-    /// <summary>
-    /// Registers everything the tools need. <paramref name="primaryHandler"/> replaces the real network handler
-    /// (tests pass an in-memory server); the read-only guard and authentication handlers are always in front of it.
-    /// </summary>
     public static IServiceCollection AddIfsAgentBridge(
         this IServiceCollection services,
         IConfiguration configuration,

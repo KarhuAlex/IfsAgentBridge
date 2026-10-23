@@ -7,7 +7,6 @@ using ModelContextProtocol.Server;
 
 namespace IfsODataMcp.Server;
 
-/// <summary>The five MCP tools. Each one is a thin wrapper: all checks live in <see cref="ODataGateway"/>.</summary>
 [McpServerToolType]
 public sealed class IfsTools(ODataGateway gateway, ToolRunner runner)
 {

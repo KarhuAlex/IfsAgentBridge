@@ -8,8 +8,6 @@ public class QueryValidationTests
     private static ValidatedQuery Validate(ODataQueryRequest request, Action<IfsODataMcp.Core.Configuration.PolicyOptions>? configure = null) =>
         TestSupport.Validate(request, TestSupport.Options(configure));
 
-    // ---- $top ---------------------------------------------------------------------------------
-
     [Fact]
     public void Top_defaults_to_50()
     {
@@ -49,8 +47,6 @@ public class QueryValidationTests
 
         Assert.Equal(20, query.Top);
     }
-
-    // ---- $select ------------------------------------------------------------------------------
 
     [Fact]
     public void Empty_select_expands_to_all_allowed_properties()
@@ -94,8 +90,6 @@ public class QueryValidationTests
     {
         Assert.Throws<QueryValidationException>(() => Validate(new ODataQueryRequest(Select: [property])));
     }
-
-    // ---- $filter ------------------------------------------------------------------------------
 
     [Theory]
     [InlineData("Status eq 'Closed'")]
@@ -170,8 +164,6 @@ public class QueryValidationTests
         Assert.Throws<QueryValidationException>(() => Validate(new ODataQueryRequest(Filter: filter)));
     }
 
-    // ---- $orderby -----------------------------------------------------------------------------
-
     [Fact]
     public void Orderby_is_parsed_with_directions()
     {
@@ -196,8 +188,6 @@ public class QueryValidationTests
         Assert.Throws<PolicyViolationException>(() =>
             Validate(new ODataQueryRequest(OrderBy: "Note"), o => o.DeniedProperties = ["Note"]));
     }
-
-    // ---- $expand ------------------------------------------------------------------------------
 
     [Fact]
     public void Expand_selects_only_allowed_properties_of_the_related_type()
@@ -241,8 +231,6 @@ public class QueryValidationTests
         Assert.Throws<PolicyViolationException>(() =>
             Validate(new ODataQueryRequest(Expand: ["Lines"]), o => o.Projections[0].EntitySets = ["PurchaseOrders", "Suppliers"]));
     }
-
-    // ---- parameter names (audit) --------------------------------------------------------------
 
     [Fact]
     public void Parameter_names_list_only_supplied_parameters()

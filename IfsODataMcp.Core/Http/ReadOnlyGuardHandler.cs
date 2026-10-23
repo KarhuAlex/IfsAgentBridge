@@ -2,11 +2,7 @@ using System.Net;
 
 namespace IfsODataMcp.Core.Http;
 
-/// <summary>
-/// Outermost handler of the target-API pipeline. It is the last line of defence behind the code paths that only
-/// ever construct GET requests: anything that is not a GET, or that points away from the configured origin,
-/// is rejected before authentication is added or a socket is opened.
-/// </summary>
+/// <summary>Rejects anything but GET to the configured origin, before authentication or the network.</summary>
 public sealed class ReadOnlyGuardHandler(Uri allowedBase, bool allowInsecureHttp) : DelegatingHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)

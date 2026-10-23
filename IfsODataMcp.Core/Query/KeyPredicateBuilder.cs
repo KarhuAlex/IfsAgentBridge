@@ -4,10 +4,6 @@ using IfsODataMcp.Core.Metadata;
 
 namespace IfsODataMcp.Core.Query;
 
-/// <summary>
-/// Renders a key predicate such as <c>(OrderNo='A1',LineNo=2)</c> from typed values.
-/// Values are formatted according to the key property's Edm type, so a value can never change the URL structure.
-/// </summary>
 public static class KeyPredicateBuilder
 {
     public static string Build(EntityTypeInfo type, IReadOnlyDictionary<string, JsonElement> keys)

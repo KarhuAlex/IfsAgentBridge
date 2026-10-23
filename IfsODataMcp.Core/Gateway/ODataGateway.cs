@@ -34,10 +34,6 @@ public sealed record QueryOutcome(
 
 public sealed record DryRunOutcome(string Url, string Method, IReadOnlyList<string> Warnings);
 
-/// <summary>
-/// Orchestrates one tool call: policy check, metadata lookup, validation, URL building, the GET, sanitizing
-/// and the audit entry. Tools are thin wrappers around this class.
-/// </summary>
 public sealed class ODataGateway
 {
     private readonly AccessPolicy _policy;
@@ -61,7 +57,6 @@ public sealed class ODataGateway
             .Select(p => new ProjectionSummary(p.Name, p.Description, p.EntitySets is { Count: > 0 } ? p.EntitySets : null))
             .ToList();
 
-    /// <summary>Lists projections; with <paramref name="includeEntitySets"/> also the allowed entity sets taken from $metadata.</summary>
     public Task<IReadOnlyList<ProjectionSummary>> ListProjectionsAsync(bool includeEntitySets, CancellationToken ct) =>
         AuditedAsync("list_projections", null, null, includeEntitySets ? ["includeEntitySets"] : [], async () =>
         {
@@ -152,7 +147,6 @@ public sealed class ODataGateway
             return (new QueryOutcome(projection, entitySet, entity, 1, false, warnings), (int?)1);
         });
 
-    /// <summary>Validates exactly like a real call and returns the URL without requesting any data.</summary>
     public Task<DryRunOutcome> BuildUrlAsync(
         string projection,
         string entitySet,

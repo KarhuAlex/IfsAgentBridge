@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace IfsODataMcp.Tests;
 
-/// <summary>Evidence that no write request can leave this process towards the target API.</summary>
 public class ReadOnlyTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private static readonly Uri Origin = new("https://erp.example.test");
@@ -98,8 +97,8 @@ public class ReadOnlyTests(WebApplicationFactory<Program> factory) : IClassFixtu
         await gateway.GetEntityAsync("ProcurementDemo", "Suppliers", keys, new ODataQueryRequest(), CancellationToken.None);
         await gateway.BuildUrlAsync("ProcurementDemo", "Suppliers", new ODataQueryRequest(), null, CancellationToken.None);
 
-        Assert.NotEmpty(recorder.Methods);
-        Assert.All(recorder.Methods, method => Assert.Equal(HttpMethod.Get, method));
+        Assert.NotEmpty(recorder.Requests);
+        Assert.All(recorder.Requests, request => Assert.Equal(HttpMethod.Get, request.Method));
     }
 
     [Fact]
@@ -142,18 +141,5 @@ public class ReadOnlyTests(WebApplicationFactory<Program> factory) : IClassFixtu
         }
 
         return directory?.FullName ?? throw new InvalidOperationException("Repository root not found.");
-    }
-
-    private sealed class RecordingHandler(HttpMessageHandler inner) : DelegatingHandler(inner)
-    {
-        private readonly List<HttpMethod> _methods = [];
-
-        public IReadOnlyList<HttpMethod> Methods => _methods;
-
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            lock (_methods) _methods.Add(request.Method);
-            return base.SendAsync(request, cancellationToken);
-        }
     }
 }

@@ -6,10 +6,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace MockODataService;
 
-/// <summary>
-/// A tiny OpenID Connect provider for demos and tests: authorization code flow with PKCE (S256) and refresh tokens.
-/// It auto-approves every request and holds everything in memory. It is not a security product.
-/// </summary>
+/// <summary>Mock OpenID Connect provider for demos and tests. Approves every request.</summary>
 public sealed class MockIdp
 {
     public const string ClientId = "ifs-agent-bridge-demo";
@@ -115,7 +112,6 @@ public sealed class MockIdp
         });
     }
 
-    /// <summary>True for the configured static token or for an access token this provider issued and has not expired.</summary>
     public bool IsAuthorized(StringValues authorization, string? staticToken)
     {
         var header = authorization.ToString();

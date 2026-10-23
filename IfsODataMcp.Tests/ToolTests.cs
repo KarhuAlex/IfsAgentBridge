@@ -1,4 +1,5 @@
 using System.Net;
+using System.Reflection;
 using System.Text.Json;
 using IfsODataMcp.Server;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -9,7 +10,6 @@ using MockODataService;
 
 namespace IfsODataMcp.Tests;
 
-/// <summary>Each MCP tool, called the way the SDK calls it, against the mock service.</summary>
 public class ToolTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private static readonly CancellationToken Ct = CancellationToken.None;
@@ -109,20 +109,15 @@ public class ToolTests(WebApplicationFactory<Program> factory) : IClassFixture<W
     [Fact]
     public async Task Build_odata_url_tool_does_not_request_data()
     {
-        var recorded = new List<string>();
-        var inner = factory.Server.CreateHandler();
-        var tools = Tools(new StubHandler(request =>
-        {
-            recorded.Add(request.RequestUri!.AbsolutePath);
-            return inner is HttpMessageHandler ? SendSync(inner, request) : throw new InvalidOperationException();
-        }));
+        var recorder = new RecordingHandler(factory.Server.CreateHandler());
+        var tools = Tools(recorder);
 
         var json = Parse(await tools.BuildOdataUrl("ProcurementDemo", "Suppliers", filter: "Country eq 'SE'", top: 9, cancellationToken: Ct));
 
         Assert.StartsWith("http://localhost/odata/ProcurementDemo/Suppliers?", json.GetProperty("url").GetString());
         Assert.Contains("$top=9", json.GetProperty("url").GetString());
         Assert.Equal("GET", json.GetProperty("method").GetString());
-        Assert.All(recorded, path => Assert.EndsWith("$metadata", path, StringComparison.Ordinal));
+        Assert.All(recorder.Requests, request => Assert.EndsWith("$metadata", request.Path, StringComparison.Ordinal));
     }
 
     [Theory]
@@ -163,8 +158,10 @@ public class ToolTests(WebApplicationFactory<Program> factory) : IClassFixture<W
     [Fact]
     public void Only_the_five_documented_tools_exist_and_all_are_marked_read_only()
     {
-        var methods = typeof(IfsTools).GetMethods().Where(m => m.GetCustomAttributes(typeof(ModelContextProtocol.Server.McpServerToolAttribute), false).Length > 0).ToList();
-        var attributes = methods.Select(m => (ModelContextProtocol.Server.McpServerToolAttribute)m.GetCustomAttributes(typeof(ModelContextProtocol.Server.McpServerToolAttribute), false)[0]).ToList();
+        var attributes = typeof(IfsTools).GetMethods()
+            .Select(m => m.GetCustomAttribute<ModelContextProtocol.Server.McpServerToolAttribute>())
+            .OfType<ModelContextProtocol.Server.McpServerToolAttribute>()
+            .ToList();
 
         Assert.Equal(
             ["build_odata_url", "describe_entity_set", "get_entity", "list_projections", "query_entity_set"],
@@ -174,11 +171,5 @@ public class ToolTests(WebApplicationFactory<Program> factory) : IClassFixture<W
             Assert.True(a.ReadOnly);
             Assert.False(a.Destructive);
         });
-    }
-
-    private static HttpResponseMessage SendSync(HttpMessageHandler handler, HttpRequestMessage request)
-    {
-        using var client = new HttpClient(handler, disposeHandler: false);
-        return client.SendAsync(new HttpRequestMessage(request.Method, request.RequestUri)).GetAwaiter().GetResult();
     }
 }

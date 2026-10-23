@@ -2,7 +2,6 @@ namespace MockODataService;
 
 using Row = Dictionary<string, object?>;
 
-/// <summary>One related entity set reachable from another through a navigation property.</summary>
 public sealed record NavDef(string TargetSet, bool IsCollection, Func<Row, Row, bool> Match);
 
 public sealed class EntitySetDef(string name, string[] keys, List<Row> rows, Dictionary<string, NavDef> navs)
@@ -20,7 +19,6 @@ public sealed class ProjectionDef(string name, string metadataXml, Dictionary<st
     public Dictionary<string, EntitySetDef> Sets { get; } = sets;
 }
 
-/// <summary>Invented data for a fictional procurement and staff-directory service. Nothing here is real.</summary>
 public static class MockData
 {
     private static readonly string[] SupplierNames =

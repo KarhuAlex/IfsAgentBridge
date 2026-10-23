@@ -12,7 +12,6 @@ using MockODataService;
 
 namespace IfsODataMcp.Tests;
 
-/// <summary>The gateway end to end against the mock service (in-memory server, real HTTP semantics).</summary>
 public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
     private static readonly CancellationToken Ct = CancellationToken.None;
@@ -21,8 +20,6 @@ public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixtur
         TestSupport.Gateway(factory.Server.CreateHandler(), TestSupport.Options(configure), audit);
 
     private static Dictionary<string, JsonElement> Keys(string json) => JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(json)!;
-
-    // ---- list_projections ---------------------------------------------------------------------
 
     [Fact]
     public async Task List_projections_returns_only_the_allow_list()
@@ -39,8 +36,6 @@ public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixtur
 
         Assert.Equal(["PurchaseOrders", "Suppliers"], projections.Single().EntitySets);
     }
-
-    // ---- describe_entity_set ------------------------------------------------------------------
 
     [Fact]
     public async Task Describe_returns_keys_properties_and_navigation_properties()
@@ -64,7 +59,7 @@ public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixtur
         }).DescribeEntitySetAsync("ProcurementDemo", "Suppliers", Ct);
 
         Assert.DoesNotContain(description.Properties, p => p.Name is "ContactEmail" or "ContactPhone");
-        Assert.Empty(description.NavigationProperties);   // PurchaseOrders is not in the entity-set allow-list
+        Assert.Empty(description.NavigationProperties);
     }
 
     [Fact]
@@ -81,8 +76,6 @@ public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixtur
     {
         await Assert.ThrowsAsync<QueryValidationException>(() => Gateway().DescribeEntitySetAsync("ProcurementDemo", "Nope", Ct));
     }
-
-    // ---- query_entity_set ---------------------------------------------------------------------
 
     [Fact]
     public async Task Query_applies_select_filter_orderby_and_top()
@@ -222,8 +215,6 @@ public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixtur
         Assert.Equal(1, handler.Requests.Count(r => r.Uri.AbsolutePath.EndsWith("$metadata", StringComparison.Ordinal)));
     }
 
-    // ---- get_entity ---------------------------------------------------------------------------
-
     [Fact]
     public async Task Get_entity_returns_one_entity_by_composite_key()
     {
@@ -256,8 +247,6 @@ public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixtur
         Assert.Equal(404, ex.StatusCode);
     }
 
-    // ---- build_odata_url ----------------------------------------------------------------------
-
     [Fact]
     public async Task Build_url_returns_the_validated_url_without_requesting_data()
     {
@@ -287,8 +276,6 @@ public class GatewayTests(WebApplicationFactory<Program> factory) : IClassFixtur
         await Assert.ThrowsAsync<PolicyViolationException>(() => Gateway().BuildUrlAsync("ProcurementDemo", "Suppliers",
             new ODataQueryRequest(Filter: "ContactEmail eq 'x'"), null, Ct));
     }
-
-    // ---- limits -------------------------------------------------------------------------------
 
     [Fact]
     public async Task Responses_over_the_size_limit_are_rejected_by_content_length()

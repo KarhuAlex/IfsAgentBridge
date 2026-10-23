@@ -4,7 +4,6 @@ using IfsODataMcp.Core.Configuration;
 
 namespace IfsODataMcp.Core.Query;
 
-/// <summary>Builds request URLs from validated input. All URL shape knowledge comes from <see cref="ODataEndpointOptions"/>.</summary>
 public sealed class ODataUrlBuilder
 {
     private const string SafeCharacters = "-._~'()*,:/";
@@ -87,7 +86,6 @@ public sealed class ODataUrlBuilder
         return options.Count == 0 ? node.Navigation : $"{node.Navigation}({string.Join(";", options)})";
     }
 
-    /// <summary>Percent-encodes everything except unreserved characters and a few that keep OData URLs readable.</summary>
     internal static string Escape(string value, string safe = SafeCharacters)
     {
         var builder = new StringBuilder(value.Length + 16);

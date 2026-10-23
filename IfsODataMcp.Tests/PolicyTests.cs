@@ -65,7 +65,7 @@ public class PolicyTests
         var order = metadata.FindEntitySet("PurchaseOrders")!.EntityType;
 
         Assert.True(policy.IsDenied(order, "Note"));
-        Assert.True(policy.IsDenied(supplier, "Rating"));   // scoped by entity set name
+        Assert.True(policy.IsDenied(supplier, "Rating"));
         Assert.False(policy.IsDenied(order, "Rating"));
         Assert.False(policy.IsDenied(order, "Status"));
     }

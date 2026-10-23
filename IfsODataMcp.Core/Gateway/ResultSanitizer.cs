@@ -4,10 +4,7 @@ using IfsODataMcp.Core.Policy;
 
 namespace IfsODataMcp.Core.Gateway;
 
-/// <summary>
-/// Defence in depth for results. The URL already selects only allowed properties; this pass removes
-/// denied properties and OData control annotations from whatever the server actually returned.
-/// </summary>
+/// <summary>Removes denied properties and OData annotations from a result, in case the server ignored $select.</summary>
 public sealed class ResultSanitizer(AccessPolicy policy, ServiceMetadata metadata)
 {
     public JsonObject Sanitize(JsonObject entity, EntityTypeInfo type)

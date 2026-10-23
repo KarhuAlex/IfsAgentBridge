@@ -5,10 +5,7 @@ namespace MockODataService;
 
 using Row = Dictionary<string, object?>;
 
-/// <summary>
-/// A deliberately small OData query evaluator for demo data: $select, $filter (comparisons, and/or/not,
-/// contains/startswith/endswith/tolower/toupper/length), $orderby, $top, $skip and $expand with nested $select.
-/// </summary>
+/// <summary>Evaluates the OData options the demo needs: select, filter, orderby, top, skip and expand.</summary>
 public static partial class MockQueryEngine
 {
     public const int ServerPageSize = 100;
@@ -154,7 +151,6 @@ public static partial class MockQueryEngine
         public int Compare(object? x, object? y) => FilterParser.CompareValues(x, y);
     }
 
-    /// <summary>Recursive-descent parser that turns a $filter string into a row predicate.</summary>
     private sealed partial class FilterParser(string text, ProjectionDef projection, EntitySetDef set)
     {
         private List<string> _tokens = [];

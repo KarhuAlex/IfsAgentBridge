@@ -5,7 +5,6 @@ using Microsoft.OData.Edm.Validation;
 
 namespace IfsODataMcp.Core.Metadata;
 
-/// <summary>Parses an OData v4 CSDL <c>$metadata</c> document into a <see cref="ServiceMetadata"/>.</summary>
 public static class MetadataParser
 {
     public static ServiceMetadata Parse(string csdlXml)

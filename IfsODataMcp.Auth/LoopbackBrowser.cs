@@ -5,10 +5,7 @@ using IdentityModel.OidcClient.Browser;
 
 namespace IfsODataMcp.Auth;
 
-/// <summary>
-/// Opens the system browser at the authorization URL and waits for the redirect on a loopback listener.
-/// The listener binds to 127.0.0.1 only and answers with a fixed page, so nothing from the request is reflected.
-/// </summary>
+/// <summary>Opens the system browser and receives the redirect on 127.0.0.1, answering with a fixed page.</summary>
 public sealed class LoopbackBrowser : IBrowser
 {
     private const string DonePage =

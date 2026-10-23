@@ -3,10 +3,6 @@ using Microsoft.Extensions.Logging;
 
 namespace IfsODataMcp.Core.Logging;
 
-/// <summary>
-/// Writes log lines to a <see cref="TextWriter"/> (stderr in the server, because stdout carries the MCP protocol)
-/// after passing message and exception text through the <see cref="SecretRedactor"/>.
-/// </summary>
 public sealed class RedactingLoggerProvider(TextWriter output, SecretRedactor redactor, LogLevel minimumLevel) : ILoggerProvider
 {
     private readonly object _gate = new();

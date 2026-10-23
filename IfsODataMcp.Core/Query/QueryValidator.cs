@@ -5,7 +5,6 @@ using IfsODataMcp.Core.Policy;
 
 namespace IfsODataMcp.Core.Query;
 
-/// <summary>Checks a query against the service metadata and the access policy and normalizes it.</summary>
 public sealed partial class QueryValidator(AccessPolicy policy)
 {
     [GeneratedRegex(@"^[A-Za-z_][A-Za-z0-9_]*$")]
@@ -36,7 +35,6 @@ public sealed partial class QueryValidator(AccessPolicy policy)
         return new ValidatedQuery(select, filter, orderBy, top, expand, warnings);
     }
 
-    /// <summary>Validates and normalizes a select list. An empty list means every property the policy allows.</summary>
     public IReadOnlyList<string> ValidateSelect(EntityTypeInfo type, IReadOnlyList<string>? requested, List<string> warnings)
     {
         var all = policy.AllowedProperties(type).Select(p => p.Name).ToList();

@@ -3,10 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace IfsODataMcp.Core.Audit;
 
-/// <summary>
-/// One line of the audit log. By construction it has no field that can hold a data value or a token:
-/// only names, counts and timings.
-/// </summary>
+/// <summary>Holds names, counts and timings only, so an entry cannot leak a data value.</summary>
 public sealed record AuditEntry(
     DateTimeOffset Timestamp,
     string Tool,
@@ -29,7 +26,6 @@ public sealed class NullAuditLog : IAuditLog
     }
 }
 
-/// <summary>Appends JSON lines to a local file. A failure to write never fails the request.</summary>
 public sealed class FileAuditLog : IAuditLog
 {
     private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
@@ -67,7 +63,7 @@ public sealed class FileAuditLog : IAuditLog
         }
         catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
         {
-            // Auditing is best effort; the error text is intentionally not forwarded anywhere.
+            // Auditing is best effort and must not fail a request.
         }
     }
 }

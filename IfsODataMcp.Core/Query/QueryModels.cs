@@ -1,6 +1,5 @@
 namespace IfsODataMcp.Core.Query;
 
-/// <summary>What the caller asked for. Not trusted until it has been through <see cref="QueryValidator"/>.</summary>
 public sealed record ODataQueryRequest(
     IReadOnlyList<string>? Select = null,
     string? Filter = null,
@@ -8,7 +7,6 @@ public sealed record ODataQueryRequest(
     int? Top = null,
     IReadOnlyList<string>? Expand = null)
 {
-    /// <summary>Names (never values) of the parameters that were supplied. Used for the audit log.</summary>
     public IReadOnlyList<string> ParameterNames()
     {
         var names = new List<string>();
@@ -23,10 +21,8 @@ public sealed record ODataQueryRequest(
 
 public sealed record OrderByItem(string Property, bool Descending);
 
-/// <summary>One expanded navigation property. Its select list is always explicit so denied properties are never fetched.</summary>
 public sealed record ExpandNode(string Navigation, IReadOnlyList<string> Select, IReadOnlyList<ExpandNode> Children);
 
-/// <summary>A query that passed validation and may be turned into a URL.</summary>
 public sealed record ValidatedQuery(
     IReadOnlyList<string> Select,
     string? Filter,

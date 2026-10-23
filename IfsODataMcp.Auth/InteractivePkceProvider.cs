@@ -8,10 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IfsODataMcp.Auth;
 
-/// <summary>
-/// OpenID Connect authorization code flow with PKCE. The system browser performs the sign-in, a loopback listener
-/// receives the redirect, and the resulting tokens live in memory only: they are never written to disk or logged.
-/// </summary>
+/// <summary>OpenID Connect authorization code flow with PKCE. Tokens stay in memory.</summary>
 public sealed class InteractivePkceProvider : IAuthProvider, IDisposable
 {
     private readonly OidcOptions _options;

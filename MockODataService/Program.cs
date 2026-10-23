@@ -14,7 +14,6 @@ namespace MockODataService
 {
     using Row = Dictionary<string, object?>;
 
-    /// <summary>Every request the mock received, so tests can assert on methods and paths.</summary>
     public sealed class RequestLog
     {
         private readonly ConcurrentQueue<(string Method, string PathAndQuery)> _entries = new();

@@ -8,10 +8,7 @@ using ModelContextProtocol.Protocol;
 
 namespace IfsODataMcp.Server;
 
-/// <summary>
-/// Runs a tool body and turns the outcome into an MCP result. Errors written by this project become tool errors the
-/// agent can act on; anything unexpected is logged (redacted) and reported without detail.
-/// </summary>
+/// <summary>Turns tool results and errors into MCP results.</summary>
 public sealed class ToolRunner(ILogger<ToolRunner> logger, SecretRedactor redactor)
 {
     public const string UntrustedDataNotice =

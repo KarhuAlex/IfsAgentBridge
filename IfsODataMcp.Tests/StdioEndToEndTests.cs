@@ -7,10 +7,6 @@ using ModelContextProtocol.Protocol;
 
 namespace IfsODataMcp.Tests;
 
-/// <summary>
-/// Starts the mock service and the real MCP server as separate processes and talks to the server over stdio,
-/// exactly as Claude Desktop or Claude Code would.
-/// </summary>
 public sealed class StdioEndToEndTests : IAsyncLifetime
 {
     private Process? _mock;
@@ -113,8 +109,8 @@ public sealed class StdioEndToEndTests : IAsyncLifetime
         var queriedText = Text(queried);
         Assert.NotEqual(true, queried.IsError);
         Assert.Contains("untrusted", queriedText);
-        Assert.DoesNotContain("\"ContactEmail\"", queriedText, StringComparison.Ordinal);   // no such key in any row
-        Assert.Contains("policy denies", queriedText);                                       // the removal is reported
+        Assert.DoesNotContain("\"ContactEmail\"", queriedText, StringComparison.Ordinal);
+        Assert.Contains("policy denies", queriedText);
 
         var entity = Text(await client.CallToolAsync("get_entity", new Dictionary<string, object?>
         {

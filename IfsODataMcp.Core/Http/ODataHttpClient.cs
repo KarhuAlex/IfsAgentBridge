@@ -6,10 +6,7 @@ using IfsODataMcp.Core.Security;
 
 namespace IfsODataMcp.Core.Http;
 
-/// <summary>
-/// The only component that talks to the target API. It exposes a single operation, GET, and enforces
-/// the timeout and response-size limits.
-/// </summary>
+/// <summary>The only code that sends requests to the API. Applies the timeout and the response size limit.</summary>
 public sealed class ODataHttpClient(HttpClient http, PolicyOptions limits, SecretRedactor redactor)
 {
     public async Task<string> GetStringAsync(Uri uri, string accept, CancellationToken cancellationToken)
@@ -44,7 +41,7 @@ public sealed class ODataHttpClient(HttpClient http, PolicyOptions limits, Secre
         }
         catch (HttpRequestException ex)
         {
-            // The exception text can echo URLs; run it through the redactor and drop the original as inner exception.
+            // The message can echo a URL or header, so it goes through the redactor and the original is not kept.
             throw new UpstreamException($"The request failed: {redactor.Redact(ex.Message)}", (int?)ex.StatusCode);
         }
     }

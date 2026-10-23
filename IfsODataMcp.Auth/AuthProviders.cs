@@ -19,10 +19,8 @@ public sealed class AuthOptions
 {
     public AuthMode Mode { get; set; } = AuthMode.None;
 
-    /// <summary>Name of the environment variable that holds the token in <see cref="AuthMode.StaticBearer"/> mode.</summary>
     public string StaticBearerEnvVar { get; set; } = "IFS_BRIDGE_TOKEN";
 
-    /// <summary>Start the interactive login right at startup instead of on the first tool call.</summary>
     public bool LoginAtStartup { get; set; } = true;
 
     public OidcOptions Oidc { get; set; } = new();
@@ -30,7 +28,6 @@ public sealed class AuthOptions
 
 public sealed class OidcOptions
 {
-    /// <summary>Issuer / authority URL; discovery is read from <c>{Authority}/.well-known/openid-configuration</c>.</summary>
     public string Authority { get; set; } = "";
 
     public string ClientId { get; set; } = "";
@@ -45,19 +42,15 @@ public sealed class OidcOptions
 
     public int LoginTimeoutSeconds { get; set; } = 120;
 
-    /// <summary>Seconds before expiry at which a cached token is treated as expired.</summary>
     public int ExpirySkewSeconds { get; set; } = 60;
 
-    /// <summary>Allows an http authority on a non-loopback host. Off by default.</summary>
     public bool AllowInsecureAuthority { get; set; }
 }
 
-/// <summary>Supplies the bearer token for requests to the target API. Tokens are held in memory only.</summary>
 public interface IAuthProvider
 {
     string Name { get; }
 
-    /// <summary>The access token to send, or null when no authentication is configured.</summary>
     Task<string?> GetAccessTokenAsync(CancellationToken cancellationToken);
 
     /// <summary>Called when the API rejected the token, so the next call acquires a fresh one.</summary>
@@ -75,7 +68,6 @@ public sealed class NoAuthProvider : IAuthProvider
     }
 }
 
-/// <summary>Reads a token from an environment variable once, at construction. Never writes it anywhere.</summary>
 public sealed class StaticBearerProvider : IAuthProvider
 {
     private readonly string _token;

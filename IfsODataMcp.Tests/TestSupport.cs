@@ -12,7 +12,6 @@ using MockODataService;
 
 namespace IfsODataMcp.Tests;
 
-/// <summary>Shared builders so each test states only what it cares about.</summary>
 internal static class TestSupport
 {
     public const string ProjectionName = "ProcurementDemo";
@@ -36,7 +35,6 @@ internal static class TestSupport
         ServiceRootTemplate = "{baseUrl}/odata/{projection}/",
     };
 
-    /// <summary>Gateway wired to the given handler, with the same pipeline order as the real server.</summary>
     public static ODataGateway Gateway(
         HttpMessageHandler inner, PolicyOptions? options = null, IAuditLog? audit = null, SecretRedactor? redactor = null)
     {
@@ -57,7 +55,6 @@ internal static class TestSupport
     }
 }
 
-/// <summary>Records every request and answers with a canned response.</summary>
 internal sealed class StubHandler(Func<HttpRequestMessage, HttpResponseMessage> respond) : HttpMessageHandler
 {
     public List<(HttpMethod Method, Uri Uri)> Requests { get; } = [];
@@ -82,4 +79,23 @@ internal sealed class MemoryAuditLog : IAuditLog
     public List<AuditEntry> Entries { get; } = [];
 
     public void Write(AuditEntry entry) => Entries.Add(entry);
+}
+
+internal sealed class RecordingHandler(HttpMessageHandler inner) : DelegatingHandler(inner)
+{
+    private readonly List<(HttpMethod Method, string Path)> _requests = [];
+
+    public IReadOnlyList<(HttpMethod Method, string Path)> Requests
+    {
+        get
+        {
+            lock (_requests) return [.. _requests];
+        }
+    }
+
+    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        lock (_requests) _requests.Add((request.Method, request.RequestUri!.AbsolutePath));
+        return base.SendAsync(request, cancellationToken);
+    }
 }

@@ -5,10 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace IfsODataMcp.Server;
 
-/// <summary>
-/// Starts the interactive sign-in in the background when the server starts, so the token is usually
-/// ready before the first tool call. A failure here is logged; the next tool call will try again.
-/// </summary>
+/// <summary>Starts the sign-in in the background so the token is usually ready for the first tool call.</summary>
 public sealed class AuthWarmupService(IAuthProvider auth, AuthOptions options, ILogger<AuthWarmupService> logger) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)

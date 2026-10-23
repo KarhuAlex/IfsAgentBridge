@@ -4,11 +4,7 @@ using IfsODataMcp.Core.Policy;
 
 namespace IfsODataMcp.Core.Query;
 
-/// <summary>
-/// Validates a <c>$filter</c> expression without building a full OData parser: the expression is tokenized,
-/// literals and operators are checked against allow-lists and every property reference is resolved against
-/// the entity type and the deny-list. Anything the tokenizer does not understand is rejected.
-/// </summary>
+/// <summary>Checks a $filter by tokenizing it instead of fully parsing it. Anything not recognized is rejected.</summary>
 public static partial class FilterValidator
 {
     private static readonly HashSet<string> Operators = new(StringComparer.Ordinal)
@@ -44,7 +40,6 @@ public static partial class FilterValidator
     [GeneratedRegex(@"\G[A-Za-z_][A-Za-z0-9_]*(?:[./][A-Za-z_][A-Za-z0-9_]*)*")]
     private static partial Regex Identifier();
 
-    /// <summary>Throws if the filter is not acceptable for <paramref name="type"/>.</summary>
     public static void Validate(
         string filter,
         EntityTypeInfo type,
