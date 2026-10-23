@@ -74,7 +74,7 @@ dotnet test -c Release
 **1. Start the mock service** (fictional suppliers, purchase orders and order lines):
 
 ```bash
-dotnet run --project samples/MockODataService --urls http://127.0.0.1:5100
+dotnet run --project MockODataService --urls http://127.0.0.1:5100
 ```
 
 Try it: <http://127.0.0.1:5100/odata/ProcurementDemo/$metadata> and
@@ -83,7 +83,7 @@ Try it: <http://127.0.0.1:5100/odata/ProcurementDemo/$metadata> and
 **2. Publish the server** (so the MCP host starts a plain executable, with no build output on stdout):
 
 ```bash
-dotnet publish src/IfsODataMcp.Server -c Release -o publish
+dotnet publish IfsODataMcp.Server -c Release -o publish
 ```
 
 **3. Register it with your MCP host.** Use absolute paths.
@@ -263,13 +263,13 @@ assumptions:
 ## Repository layout
 
 ```
-src/IfsODataMcp.Core      OData client, metadata model, query builder, validation, policy, audit
-src/IfsODataMcp.Auth      IAuthProvider: NoAuth, StaticBearer, InteractivePkce
-src/IfsODataMcp.Server    MCP server, tool definitions, configuration
-samples/MockODataService  Invented OData service + tiny OIDC provider (tests and demo)
-tests/IfsODataMcp.Tests   Unit, integration and stdio end-to-end tests
-config/                   mock.json and a placeholder IFS template
-docs/                     Architecture and security notes
+IfsODataMcp.Core       OData client, metadata model, query builder, validation, policy, audit
+IfsODataMcp.Auth       IAuthProvider: NoAuth, StaticBearer, InteractivePkce
+IfsODataMcp.Server     MCP server, tool definitions, configuration
+IfsODataMcp.Tests      Unit, integration and stdio end-to-end tests
+MockODataService       Invented OData service + tiny OIDC provider (tests and demo)
+config/                mock.json and a placeholder IFS template
+docs/                  Architecture and security notes
 ```
 
 ## Development

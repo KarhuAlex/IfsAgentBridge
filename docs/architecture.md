@@ -53,8 +53,8 @@ flowchart LR
 | `IfsODataMcp.Core` | Everything that decides what may be asked and how: policy, `$metadata` model, query validation, URL building, the GET-only HTTP pipeline, result sanitizing, audit log, secret redaction. No dependency on MCP or on a specific identity provider. |
 | `IfsODataMcp.Auth` | `IAuthProvider` and its three implementations, the handler that adds the `Authorization` header, and the loopback browser used by the PKCE flow. |
 | `IfsODataMcp.Server` | Host, configuration loading, DI wiring and the MCP tool definitions. Tools hold no logic of their own. |
-| `samples/MockODataService` | Invented OData service (suppliers, purchase orders, order lines, staff) and a small OIDC provider. Used by the tests and the demo. |
-| `tests/IfsODataMcp.Tests` | Unit tests, integration tests against the mock service, and a stdio end-to-end test that talks to the real server process through the MCP client. |
+| `MockODataService` | Invented OData service (suppliers, purchase orders, order lines, staff) and a small OIDC provider. Used by the tests and the demo. |
+| `IfsODataMcp.Tests` | Unit tests, integration tests against the mock service, and a stdio end-to-end test that talks to the real server process through the MCP client. |
 
 ## One `query_entity_set` call
 

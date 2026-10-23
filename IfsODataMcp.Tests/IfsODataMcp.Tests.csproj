@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\IfsODataMcp.Core\IfsODataMcp.Core.csproj" />
-    <ProjectReference Include="..\..\src\IfsODataMcp.Auth\IfsODataMcp.Auth.csproj" />
-    <ProjectReference Include="..\..\src\IfsODataMcp.Server\IfsODataMcp.Server.csproj" />
-    <ProjectReference Include="..\..\samples\MockODataService\MockODataService.csproj" />
+    <ProjectReference Include="..\IfsODataMcp.Core\IfsODataMcp.Core.csproj" />
+    <ProjectReference Include="..\IfsODataMcp.Auth\IfsODataMcp.Auth.csproj" />
+    <ProjectReference Include="..\IfsODataMcp.Server\IfsODataMcp.Server.csproj" />
+    <ProjectReference Include="..\MockODataService\MockODataService.csproj" />
   </ItemGroup>
 
 </Project>

@@ -114,7 +114,7 @@ public class ReadOnlyTests(WebApplicationFactory<Program> factory) : IClassFixtu
         var offenders = new List<string>();
         foreach (var project in new[] { "IfsODataMcp.Core", "IfsODataMcp.Server" })
         {
-            foreach (var file in Directory.EnumerateFiles(Path.Combine(root, "src", project), "*.cs", SearchOption.AllDirectories))
+            foreach (var file in Directory.EnumerateFiles(Path.Combine(root, project), "*.cs", SearchOption.AllDirectories))
             {
                 if (file.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}")) continue;
                 if (forbidden.IsMatch(File.ReadAllText(file))) offenders.Add(Path.GetRelativePath(root, file));
