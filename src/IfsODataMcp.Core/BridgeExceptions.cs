@@ -27,6 +27,8 @@ public sealed class ReadOnlyViolationException(string message) : BridgeException
 
 public sealed class ResponseTooLargeException(string message) : BridgeException(message, "response_too_large");
 
+public sealed class AuthenticationFailedException(string message) : BridgeException(message, "auth_failed");
+
 public sealed class ConfigurationException(string message) : BridgeException(message, "configuration");
 
 /// <summary>The target API answered with an error, or could not be reached.</summary>
